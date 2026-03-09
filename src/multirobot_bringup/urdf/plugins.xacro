@@ -21,7 +21,7 @@
             <odom_topic>$(arg prefix)odom</odom_topic>
             
             <tf_topic>/tf</tf_topic>
-            <frame_id>odom</frame_id>
+            <frame_id>$(arg prefix)odom</frame_id>
             
             <child_frame_id>$(arg prefix)base_footprint</child_frame_id> 
         </plugin>

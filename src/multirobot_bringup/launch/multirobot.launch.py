@@ -89,7 +89,25 @@ def launch_setup(context, *args, **kwargs):
             output='screen'
         )
 
-        nodes.extend([rsp_node, spawn_node])
+        
+
+        static_tf_node = Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name=f'static_tf_{robot_name}',
+            arguments=[
+                '--x', '0.0', 
+                '--y', str(y_pose), 
+                '--z', '0.0',
+                '--yaw', '0.0', 
+                '--pitch', '0.0', 
+                '--roll', '0.0', 
+                '--frame-id', 'odom', 
+                '--child-frame-id', f'{robot_name}/odom'
+            ]
+        )
+
+        nodes.extend([rsp_node, spawn_node, static_tf_node])
 
     # 5. Guardar archivo YAML temporal y cargar el Bridge
     bridge_yaml_path = os.path.join(tempfile.gettempdir(), 'multirobot_bridge.yaml')
