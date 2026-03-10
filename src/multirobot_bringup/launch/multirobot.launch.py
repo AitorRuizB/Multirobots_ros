@@ -10,7 +10,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     return LaunchDescription([
-        # Parámetro para elegir cuántos robots queremos (por defecto 2)
+        # Parámetro para elegir num de robots
         DeclareLaunchArgument('num_robots', default_value='2', description='Numero de robots a instanciar'),
         OpaqueFunction(function=launch_setup)
     ])
@@ -24,7 +24,7 @@ def launch_setup(context, *args, **kwargs):
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
     # 2. Iniciar Gazebo
-    world_file = os.path.join(pkg_multirobot, 'world', 'world_new.sdf') # <-- ¡CAMBIA ESTO POR EL NOMBRE DE TU MUNDO!
+    world_file = os.path.join(pkg_multirobot, 'world', 'world_new.sdf') 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
@@ -50,10 +50,10 @@ def launch_setup(context, *args, **kwargs):
         robot_name = f'robot{i}'
         prefix = f'{robot_name}/'
         
-        # Separamos los robots 1 metro en el eje Y para que no choquen al nacer
+        # Separar los robots 1 metro en el eje Y para que no choquen
         y_pose = (i - 1) * 1.0  
 
-        # Añadimos las "tuberías" de este robot al bridge
+        # Añadir puentes de este robot al bridge
         bridge_config.extend([
             {'ros_topic_name': f'/{robot_name}/cmd_vel', 'gz_topic_name': f'/{robot_name}/cmd_vel', 'ros_type_name': 'geometry_msgs/msg/Twist', 'gz_type_name': 'gz.msgs.Twist', 'direction': 'ROS_TO_GZ'},
             {'ros_topic_name': f'/{robot_name}/odom', 'gz_topic_name': f'/{robot_name}/odom', 'ros_type_name': 'nav_msgs/msg/Odometry', 'gz_type_name': 'gz.msgs.Odometry', 'direction': 'GZ_TO_ROS'},
@@ -99,10 +99,10 @@ def launch_setup(context, *args, **kwargs):
                 '--x', '0.0', 
                 '--y', str(y_pose), 
                 '--z', '0.0',
-                '--yaw', '0.0', 
+                '--yaw', '0.0',
                 '--pitch', '0.0', 
                 '--roll', '0.0', 
-                '--frame-id', 'odom', 
+                '--frame-id', 'map', 
                 '--child-frame-id', f'{robot_name}/odom'
             ]
         )
